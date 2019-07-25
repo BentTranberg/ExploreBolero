@@ -1,5 +1,7 @@
-module BoleroApp.Client.Common.View
+namespace BoleroApp.Client.Common
 
-open Bolero
+module View =
 
-type Tmpl = Template<"Common/common.html">
+    open Bolero
+
+    type Tmpl = Template<"Common/common.html">

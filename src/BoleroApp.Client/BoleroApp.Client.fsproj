@@ -7,21 +7,13 @@
     <Content Include="Common\common.html" />
     <Compile Include="Common\Common.View.fs" />
     <Content Include="Counter\counter.html" />
-    <Compile Include="Counter\Counter.Model.fs" />
-    <Compile Include="Counter\Counter.View.fs" />
-    <Compile Include="Counter\Counter.Update.fs" />
+    <Compile Include="Counter\Counter.fs" />
     <Content Include="Login\login.html" />
-    <Compile Include="Login\Login.Model.fs" />
-    <Compile Include="Login\Login.View.fs" />
-    <Compile Include="Login\Login.Update.fs" />
+    <Compile Include="Login\Login.fs" />
     <Content Include="Books\books.html" />
-    <Compile Include="Books\Books.Model.fs" />
-    <Compile Include="Books\Books.View.fs" />
-    <Compile Include="Books\Books.Update.fs" />
+    <Compile Include="Books\Books.fs" />
     <Content Include="Main\main.html" />
-    <Compile Include="Main\Main.Model.fs" />
-    <Compile Include="Main\Main.View.fs" />
-    <Compile Include="Main\Main.Update.fs" />
+    <Compile Include="Main\Main.fs" />
     <Compile Include="App.fs" />
     <Compile Include="Startup.fs" />
   </ItemGroup>
