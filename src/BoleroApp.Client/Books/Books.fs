@@ -1,31 +1,24 @@
 namespace BoleroApp.Client.Books
 
-open Bolero.Json
 open System
-open Bolero.Remoting
+open Bolero.Json
 
 type Book =
     {
         title: string
         author: string
-        [<DateTimeFormat "yyyy-MM-dd">]
-        publishDate: DateTime
+        [<DateTimeFormat "yyyy-MM-dd">] publishDate: DateTime
         isbn: string
     }
 
 type RemoteService =
     {
-        /// Get the list of all books in the collection.
         getBooks: unit -> Async<Book[]>
-
-        /// Add a book in the collection.
         addBook: Book -> Async<unit>
-
-        /// Remove a book from the collection, identified by its ISBN.
         removeBookByIsbn: string -> Async<unit>
     }
 
-    interface IRemoteService with
+    interface Bolero.Remoting.IRemoteService with
         member this.BasePath = "/books"
 
 type Message =
@@ -40,10 +33,10 @@ type Model =
 
 module Model =
 
-    let init = { books = None }
-
     open Bolero.Remoting.Client
     open Elmish
+
+    let init = { books = None }
 
     let update (remote: RemoteService) (message: Message) (model: Model) =
         match message with

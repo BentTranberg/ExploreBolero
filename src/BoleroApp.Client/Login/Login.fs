@@ -2,13 +2,8 @@ namespace BoleroApp.Client.Login
 
 type RemoteService =
     {
-        /// Sign into the application.
         signIn : string * string -> Async<option<string>>
-
-        /// Get the user's name, or None if they are not authenticated.
-        getUsername : unit -> Async<string>
-
-        /// Sign out from the application.
+        getUsername : unit -> Async<string> // Get the user's name, or None if they are not authenticated.
         signOut : unit -> Async<unit>
     }
 
