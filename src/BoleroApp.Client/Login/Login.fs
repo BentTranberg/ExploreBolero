@@ -1,5 +1,20 @@
 namespace BoleroApp.Client.Login
 
+type RemoteService =
+    {
+        /// Sign into the application.
+        signIn : string * string -> Async<option<string>>
+
+        /// Get the user's name, or None if they are not authenticated.
+        getUsername : unit -> Async<string>
+
+        /// Sign out from the application.
+        signOut : unit -> Async<unit>
+    }
+
+    interface Bolero.Remoting.IRemoteService with
+        member this.BasePath = "/login"
+
 type Message =
     | SetUsername of string
     | SetPassword of string
@@ -22,6 +37,10 @@ type Model =
 
 module Model =
 
+    open Bolero.Remoting
+    open Bolero.Remoting.Client
+    open Elmish
+
     let init =
         {
             username = ""
@@ -30,28 +49,7 @@ module Model =
             signInFailed = false
         }
 
-open Bolero.Remoting
-
-type RemoteService =
-    {
-        /// Sign into the application.
-        signIn : string * string -> Async<option<string>>
-
-        /// Get the user's name, or None if they are not authenticated.
-        getUsername : unit -> Async<string>
-
-        /// Sign out from the application.
-        signOut : unit -> Async<unit>
-    }
-
-    interface IRemoteService with
-        member this.BasePath = "/login"
-
-module Update =
-
-    open Bolero.Remoting
-    open Bolero.Remoting.Client
-    open Elmish
+    let initCmd = Cmd.ofMsg GetSignedInAs
 
     let update (remote: RemoteService) (message: Message) (model: Model) =
         match message with
@@ -81,9 +79,6 @@ module Update =
             { model with signedInAs = None }, Cmd.none
         | Error _ ->
             model, Cmd.none
-
-    let init =
-        Cmd.ofMsg GetSignedInAs
 
 module View =
 

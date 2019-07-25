@@ -15,13 +15,8 @@ type App() =
                 books = this.Remote<Books.RemoteService>()
                 login = this.Remote<Login.RemoteService>()
             }
-
-        let init _ =
-            (Main.Model.init, Main.Update.init)
-
-        let update message model =
-            Main.Update.update remote message model
-
+        let init _ = Main.Model.init, Main.Model.initCmd
+        let update message model = Main.Model.update remote message model
         Program.mkProgram init update Main.View.view
         |> Program.withRouter Main.Router.router
 #if DEBUG

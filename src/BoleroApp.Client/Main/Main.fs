@@ -33,6 +33,9 @@ type Model =
 
 module Model =
 
+    open Bolero.Remoting
+    open Elmish
+
     let init =
         {
             page = Home
@@ -42,10 +45,9 @@ module Model =
             login = Login.Model.init
         }
 
-module Update =
-
-    open Bolero.Remoting
-    open Elmish
+    let initCmd = Cmd.batch [
+        Cmd.map Login Login.Model.initCmd
+    ]
 
     let update (remote: RemoteServices) (message: Message) (model: Model) =
         match message with
@@ -72,7 +74,7 @@ module Update =
             { model with books = booksModel }, Cmd.map Books booksCmd
 
         | Login msg ->
-            let loginModel, loginCmd = Login.Update.update remote.login msg model.login
+            let loginModel, loginCmd = Login.Model.update remote.login msg model.login
             let model = { model with login = loginModel }
             let cmd = Cmd.map Login loginCmd
             let extraCmd =
@@ -80,10 +82,6 @@ module Update =
                 | Login.RecvSignedInAs (Some _) -> Cmd.ofMsg (Books Books.GetBooks)
                 | _ -> Cmd.none
             model, Cmd.batch [cmd; extraCmd]
-
-    let init = Cmd.batch [
-        Cmd.map Login Login.Update.init
-    ]
 
 module Router =
 
