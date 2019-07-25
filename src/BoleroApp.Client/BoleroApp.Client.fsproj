@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="Common\common.html" />
+    <Compile Include="Common\Common.View.fs" />
+    <Content Include="Counter\counter.html" />
+    <Compile Include="Counter\Counter.Model.fs" />
+    <Compile Include="Counter\Counter.View.fs" />
+    <Compile Include="Counter\Counter.Update.fs" />
+    <Content Include="Login\login.html" />
+    <Compile Include="Login\Login.Model.fs" />
+    <Compile Include="Login\Login.View.fs" />
+    <Compile Include="Login\Login.Update.fs" />
+    <Content Include="Books\books.html" />
+    <Compile Include="Books\Books.Model.fs" />
+    <Compile Include="Books\Books.View.fs" />
+    <Compile Include="Books\Books.Update.fs" />
+    <Content Include="Main\main.html" />
+    <Compile Include="Main\Main.Model.fs" />
+    <Compile Include="Main\Main.View.fs" />
+    <Compile Include="Main\Main.Update.fs" />
+    <Compile Include="App.fs" />
+    <Compile Include="Startup.fs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Bolero" Version="0.5.28-preview*" />
+    <PackageReference Include="Bolero.Build" Version="0.5.28-preview*" />
+    <PackageReference Include="Bolero.HotReload" Version="0.5.28-preview*" />
+    <PackageReference Include="Microsoft.AspNetCore.Blazor.Build" Version="3.0-preview5-*" />
+    <PackageReference Include="Microsoft.AspNetCore.Blazor.DevServer" Version="3.0-preview5-*" />
+  </ItemGroup>
+</Project>
