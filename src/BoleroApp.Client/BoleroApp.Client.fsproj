@@ -5,7 +5,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Content Include="Common\common.html" />
-    <Compile Include="Common\Common.View.fs" />
+    <Compile Include="Common\Common.fs" />
     <Content Include="Counter\counter.html" />
     <Compile Include="Counter\Counter.fs" />
     <Content Include="Login\login.html" />
