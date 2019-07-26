@@ -1,8 +1,8 @@
-namespace BoleroApp.Server.RemoteServices
+namespace ExploreBolero.Server.RemoteServices
 
 open System
 open Bolero.Remoting.Server
-open BoleroApp.Client
+open ExploreBolero.Client
 
 module LoginService =
 

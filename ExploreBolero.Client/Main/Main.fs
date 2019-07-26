@@ -1,7 +1,7 @@
-namespace BoleroApp.Client.Main
+namespace ExploreBolero.Client.Main
 
 open Bolero
-open BoleroApp.Client
+open ExploreBolero.Client
 
 type RemoteServices =
     {

@@ -1,4 +1,4 @@
-namespace BoleroApp.Server
+namespace ExploreBolero.Server
 
 open Microsoft.AspNetCore
 open Microsoft.AspNetCore.Authentication.Cookies
@@ -7,7 +7,7 @@ open Microsoft.AspNetCore.Hosting
 open Microsoft.Extensions.DependencyInjection
 open Bolero.Remoting.Server
 open Bolero.Templating.Server
-open BoleroApp
+open ExploreBolero
 
 type Startup() =
 
@@ -22,7 +22,7 @@ type Startup() =
             .AddRemoting<RemoteServices.BookService>()
             .AddRemoting(RemoteServices.LoginService.service)
 #if DEBUG
-            .AddHotReload(templateDir = "../BoleroApp.Client")
+            .AddHotReload(templateDir = "../ExploreBolero.Client")
 #endif
         |> ignore
 

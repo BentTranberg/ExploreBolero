@@ -1,4 +1,4 @@
-namespace BoleroApp.Client
+namespace ExploreBolero.Client
 
 open Microsoft.AspNetCore.Blazor.Hosting
 open Microsoft.AspNetCore.Components.Builder

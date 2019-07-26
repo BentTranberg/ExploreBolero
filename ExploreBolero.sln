@@ -1,13 +1,10 @@
-
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26124.0
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29102.190
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{87F6C079-CBD7-4866-BDEB-CBDEA9E51D2A}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "ExploreBolero.Server", "ExploreBolero.Server\ExploreBolero.Server.fsproj", "{4E2AA925-4694-4593-ADBC-F349D269587A}"
 EndProject
-Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "BoleroApp.Server", "ExploreBolero.Server\ExploreBolero.Server.fsproj", "{4E2AA925-4694-4593-ADBC-F349D269587A}"
-EndProject
-Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "BoleroApp.Client", "ExploreBolero.Client\ExploreBolero.Client.fsproj", "{1481BBD6-A6DA-4912-A03A-134880D14701}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "ExploreBolero.Client", "ExploreBolero.Client\ExploreBolero.Client.fsproj", "{1481BBD6-A6DA-4912-A03A-134880D14701}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -46,10 +43,6 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{4E2AA925-4694-4593-ADBC-F349D269587A} = {87F6C079-CBD7-4866-BDEB-CBDEA9E51D2A}
-		{1481BBD6-A6DA-4912-A03A-134880D14701} = {87F6C079-CBD7-4866-BDEB-CBDEA9E51D2A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8CFD6033-FB8D-48BE-9628-9D83DC023CAB}

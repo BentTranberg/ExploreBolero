@@ -1,4 +1,4 @@
-namespace BoleroApp.Client.Counter
+namespace ExploreBolero.Client.Counter
 
 type Message =
     | Increment

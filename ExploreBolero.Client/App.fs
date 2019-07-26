@@ -1,4 +1,4 @@
-namespace BoleroApp.Client
+namespace ExploreBolero.Client
 
 open Bolero
 open Bolero.Remoting

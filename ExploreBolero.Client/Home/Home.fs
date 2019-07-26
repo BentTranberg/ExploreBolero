@@ -1,4 +1,4 @@
-﻿namespace BoleroApp.Client.Home
+﻿namespace ExploreBolero.Client.Home
 
 module View =
 

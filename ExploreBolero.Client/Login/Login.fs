@@ -1,4 +1,4 @@
-namespace BoleroApp.Client.Login
+namespace ExploreBolero.Client.Login
 
 type RemoteService =
     {
@@ -79,7 +79,7 @@ module View =
 
     open Bolero
     open Bolero.Html
-    open BoleroApp.Client
+    open ExploreBolero.Client
     open Elmish
 
     type Tmpl = Template<"Login/login.html">

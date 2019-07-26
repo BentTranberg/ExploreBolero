@@ -1,4 +1,4 @@
-namespace BoleroApp.Client.Books
+namespace ExploreBolero.Client.Books
 
 open System
 open Bolero.Json

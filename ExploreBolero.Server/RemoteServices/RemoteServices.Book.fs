@@ -1,10 +1,10 @@
-namespace BoleroApp.Server.RemoteServices
+namespace ExploreBolero.Server.RemoteServices
 
 open System.IO
 open Microsoft.AspNetCore.Hosting
 open Bolero
 open Bolero.Remoting.Server
-open BoleroApp.Client
+open ExploreBolero.Client
 
 // This remote service requires injected dependencies (namely, `env`),
 // so it must be defined as a RemoteHandler class.
