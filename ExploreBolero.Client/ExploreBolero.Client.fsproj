@@ -4,6 +4,8 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="BulmaExt\bulmaext.html" />
+    <Compile Include="BulmaExt\BulmaExt.fs" />
     <Content Include="Common\common.html" />
     <Compile Include="Common\Common.fs" />
     <Content Include="Counter\counter.html" />

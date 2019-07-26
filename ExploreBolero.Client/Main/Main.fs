@@ -13,12 +13,14 @@ type Page =
     | [<EndPoint "/">] Home
     | [<EndPoint "/counter">] Counter
     | [<EndPoint "/data">] Data
+    | [<EndPoint "/bulmaext">] BulmaExt
     | [<EndPoint "/dates">] Dates
 
 type Message =
     | SetPage of Page
     | Error of exn
     | Counter of Counter.Message
+    | BulmaExt of BulmaExt.Message
     | Dates of Dates.Message
     | Books of Books.Message
     | Login of Login.Message
@@ -29,6 +31,7 @@ type Model =
         page: Page
         error: string option
         counter: Counter.Model
+        bulmaExt: BulmaExt.Model
         dates: Dates.Model
         books: Books.Model
         login: Login.Model
@@ -44,6 +47,7 @@ module Model =
             page = Home
             error = None
             counter = Counter.Model.init
+            bulmaExt = BulmaExt.Model.init
             dates = Dates.Model.init
             books = Books.Model.init
             login = Login.Model.init
@@ -72,6 +76,10 @@ module Model =
         | Counter msg ->
             let counterModel = Counter.Model.update msg model.counter
             { model with counter = counterModel }, Cmd.none
+
+        | BulmaExt msg ->
+            let bulmaExtModel, bulmaExtCmd = BulmaExt.Model.update msg model.bulmaExt
+            { model with bulmaExt = bulmaExtModel }, Cmd.map BulmaExt bulmaExtCmd
 
         | Dates msg ->
             let datesModel, datesCmd = Dates.Model.update msg model.dates
@@ -114,6 +122,7 @@ module View =
             .Menu(concat [
                 menuItem model Page.Home "Home"
                 menuItem model Page.Counter "Counter"
+                menuItem model Page.BulmaExt "Bulma Extensions"
                 menuItem model Page.Dates "Dates"
                 menuItem model Page.Data "Download data"
                 Login.View.logoutButton model.login (dispatch << Message.Login)
@@ -122,6 +131,7 @@ module View =
                 cond model.page <| function
                 | Page.Home -> Home.View.homePage ()
                 | Page.Counter -> Counter.View.page model.counter (dispatch << Message.Counter)
+                | Page.BulmaExt -> BulmaExt.View.page model.bulmaExt (dispatch << Message.BulmaExt)
                 | Page.Dates -> Dates.View.page model.dates (dispatch << Message.Dates)
                 | Page.Data ->
                     cond model.login.signedInAs <| function
