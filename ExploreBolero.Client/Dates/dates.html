@@ -1,4 +1,24 @@
-﻿<h1 class="title">Bulma Extensions DatePicker</h1>
-<p>
-	Demo of Bulma Extensions DatePicker will appear here
-</p>
+﻿<h1 class="title is-4">Bulma Extensions DatePicker</h1>
+<div>
+	Demo of Bulma Extensions DatePicker
+	<input type="date" data-display-mode="inline" data-is-range="true" data-close-on-select="false">
+	<script>
+		const myDefaultOptions = {
+			color: 'primary',
+			isRange: false,
+			allowSameDayRange: true,
+			lang: 'en', // internationalization
+			startDate: undefined,
+			endDate: undefined,
+			minDate: null,
+			maxDate: null,
+			disabledDates: [],
+			disabledWeekDays: undefined,
+			weekStart: 0,
+			dateFormat: 'MM/DD/YYYY',
+			enableMonthSwitch: true,
+			enableYearSwitch: true
+		};
+		var calendars = bulmaCalendar.attach('[type="date"]', myDefaultOptions);
+	</script>
+</div>
