@@ -12,6 +12,8 @@
     <Compile Include="Login\Login.fs" />
     <Content Include="Books\books.html" />
     <Compile Include="Books\Books.fs" />
+    <Content Include="Dates\dates.html" />
+    <Compile Include="Dates\Dates.fs" />
     <Content Include="Home\home.html" />
     <Compile Include="Home\Home.fs" />
     <Content Include="Main\main.html" />

@@ -13,11 +13,13 @@ type Page =
     | [<EndPoint "/">] Home
     | [<EndPoint "/counter">] Counter
     | [<EndPoint "/data">] Data
+    | [<EndPoint "/dates">] Dates
 
 type Message =
     | SetPage of Page
     | Error of exn
     | Counter of Counter.Message
+    | Dates of Dates.Message
     | Books of Books.Message
     | Login of Login.Message
     | ClearError
@@ -27,6 +29,7 @@ type Model =
         page: Page
         error: string option
         counter: Counter.Model
+        dates: Dates.Model
         books: Books.Model
         login: Login.Model
     }
@@ -41,6 +44,7 @@ module Model =
             page = Home
             error = None
             counter = Counter.Model.init
+            dates = Dates.Model.init
             books = Books.Model.init
             login = Login.Model.init
         }
@@ -68,6 +72,10 @@ module Model =
         | Counter msg ->
             let counterModel = Counter.Model.update msg model.counter
             { model with counter = counterModel }, Cmd.none
+
+        | Dates msg ->
+            let datesModel, datesCmd = Dates.Model.update msg model.dates
+            { model with dates = datesModel }, Cmd.map Dates datesCmd
 
         | Books msg ->
             let booksModel, booksCmd = Books.Model.update remote.books msg model.books
@@ -106,6 +114,7 @@ module View =
             .Menu(concat [
                 menuItem model Page.Home "Home"
                 menuItem model Page.Counter "Counter"
+                menuItem model Page.Dates "Dates"
                 menuItem model Page.Data "Download data"
                 Login.View.logoutButton model.login (dispatch << Message.Login)
             ])
@@ -113,6 +122,7 @@ module View =
                 cond model.page <| function
                 | Page.Home -> Home.View.homePage ()
                 | Page.Counter -> Counter.View.page model.counter (dispatch << Message.Counter)
+                | Page.Dates -> Dates.View.page model.dates (dispatch << Message.Dates)
                 | Page.Data ->
                     cond model.login.signedInAs <| function
                     | Some _ -> Books.View.page model.books (dispatch << Message.Books)
