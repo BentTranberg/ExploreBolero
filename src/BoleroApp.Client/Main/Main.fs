@@ -101,9 +101,6 @@ module View =
             .Text(text)
             .Elt()
 
-    let homePage () =
-        Tmpl.Home().Elt()
-
     let view (model: Model) (dispatch: Dispatch<Message>) =
         Tmpl()
             .Menu(concat [
@@ -114,7 +111,7 @@ module View =
             ])
             .Body(
                 cond model.page <| function
-                | Page.Home -> homePage ()
+                | Page.Home -> Home.View.homePage ()
                 | Page.Counter -> Counter.View.page model.counter (dispatch << Message.Counter)
                 | Page.Data ->
                     cond model.login.signedInAs <| function
