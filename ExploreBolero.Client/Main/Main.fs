@@ -122,9 +122,9 @@ module View =
             .Menu(concat [
                 menuItem model Page.Home "Home"
                 menuItem model Page.Counter "Counter"
-                menuItem model Page.BulmaExt "Bulma Extensions"
-                menuItem model Page.Dates "Dates"
                 menuItem model Page.Data "Download data"
+                menuItem model Page.BulmaExt "Bulma Extensions"
+                menuItem model Page.Dates "Bulma Ext. Dates"
                 Login.View.logoutButton model.login (dispatch << Message.Login)
             ])
             .Body(
