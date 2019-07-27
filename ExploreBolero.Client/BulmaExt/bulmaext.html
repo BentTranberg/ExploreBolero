@@ -1,6 +1,29 @@
 ﻿<h1 class="title is-4">Bulma Extensions</h1>
 <p>
 	Demo of Bulma Extensions
-	<div class="is-divider" data-content="This is the Divider"></div>
-	For now only the Divider is demoed, just to demonstrate that Bulma Extensions indeed works.
+</p>
+<div class="is-divider" data-content="This is the Divider"></div>
+<p>
+	The following demo doesn't quite work. The input is supposed to be a
+	<a href="https://wikiki.github.io/form/tagsinput">TagsInput</a>,
+	which depends on calling a Javascript function at the right time.
+	But how would that be implemented? Click the button titled <b>This works</b>
+	in order to get the magic rolling.
+</p>
+<p>
+	<input class="input" type="tags" placeholder="Add Tag" value="Tag1,Tag2,Tag3">
+</p>
+<p>
+	<input type="button" value="This won't work" id="MyButton">
+	<script>
+		$(document).ready(function () {
+			$('#MyButton').click(function () {
+				bulmaTagsinput.attach();
+			});
+		});
+
+/**/</script>
+</p>
+<p>
+	<input type="button" value="This works" onclick="bulmaTagsinput.attach()">
 </p>
