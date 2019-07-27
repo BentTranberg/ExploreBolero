@@ -14,6 +14,7 @@ type Page =
     | [<EndPoint "/counter">] Counter
     | [<EndPoint "/data">] Data
     | [<EndPoint "/bulmaext">] BulmaExt
+    | [<EndPoint "/blazordates">] BlazorDates
     | [<EndPoint "/dates">] Dates
     | [<EndPoint "/altlogin">] AltLogin
 
@@ -22,6 +23,7 @@ type Message =
     | Error of exn
     | Counter of Counter.Message
     | BulmaExt of BulmaExt.Message
+    | BlazorDates of BlazorDates.Message
     | Dates of Dates.Message
     | Books of Books.Message
     | Login of Login.Message
@@ -33,6 +35,7 @@ type Model =
         error: string option
         counter: Counter.Model
         bulmaExt: BulmaExt.Model
+        blazorDates: BlazorDates.Model
         dates: Dates.Model
         books: Books.Model
         login: Login.Model
@@ -49,6 +52,7 @@ module Model =
             error = None
             counter = Counter.Model.init
             bulmaExt = BulmaExt.Model.init
+            blazorDates = BlazorDates.Model.init
             dates = Dates.Model.init
             books = Books.Model.init
             login = Login.Model.init
@@ -81,6 +85,10 @@ module Model =
         | BulmaExt msg ->
             let bulmaExtModel, bulmaExtCmd = BulmaExt.Model.update msg model.bulmaExt
             { model with bulmaExt = bulmaExtModel }, Cmd.map BulmaExt bulmaExtCmd
+
+        | BlazorDates msg ->
+            let blazorDatesModel, blazorDatesCmd = BlazorDates.Model.update msg model.blazorDates
+            { model with blazorDates = blazorDatesModel }, Cmd.map Dates blazorDatesCmd
 
         | Dates msg ->
             let datesModel, datesCmd = Dates.Model.update msg model.dates
@@ -125,6 +133,7 @@ module View =
                 menuItem model Page.Counter "Counter"
                 menuItem model Page.Data "Download data"
                 menuItem model Page.BulmaExt "Bulma Extensions"
+                menuItem model Page.BlazorDates "Blazor Dates"
                 menuItem model Page.Dates "Bulma Ext. Dates"
                 menuItem model Page.AltLogin "Bulma Alt. Login"
                 Login.View.logoutButton model.login (dispatch << Message.Login)
@@ -134,6 +143,7 @@ module View =
                 | Page.Home -> Home.View.homePage ()
                 | Page.Counter -> Counter.View.page model.counter (dispatch << Message.Counter)
                 | Page.BulmaExt -> BulmaExt.View.page model.bulmaExt (dispatch << Message.BulmaExt)
+                | Page.BlazorDates -> BlazorDates.View.page model.blazorDates (dispatch << Message.BlazorDates)
                 | Page.Dates -> Dates.View.page model.dates (dispatch << Message.Dates)
                 | Page.Data ->
                     cond model.login.signedInAs <| function

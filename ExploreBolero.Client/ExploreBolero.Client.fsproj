@@ -16,6 +16,9 @@
     <Compile Include="Login\Login.fs" />
     <Content Include="Books\books.html" />
     <Compile Include="Books\Books.fs" />
+    <Compile Include="DatePickerComp.fs" />
+    <Content Include="BlazorDates\blazordates.html" />
+    <Compile Include="BlazorDates\BlazorDates.fs" />
     <Content Include="Dates\dates.html" />
     <Compile Include="Dates\Dates.fs" />
     <Content Include="Home\home.html" />
@@ -26,10 +29,15 @@
     <Compile Include="Startup.fs" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="BlazorNodaTimeDateTimePicker" Version="0.0.10" />
     <PackageReference Include="Bolero" Version="0.5.28-preview*" />
     <PackageReference Include="Bolero.Build" Version="0.5.28-preview*" />
     <PackageReference Include="Bolero.HotReload" Version="0.5.28-preview*" />
     <PackageReference Include="Microsoft.AspNetCore.Blazor.Build" Version="3.0-preview5-*" />
     <PackageReference Include="Microsoft.AspNetCore.Blazor.DevServer" Version="3.0-preview5-*" />
+    <PackageReference Include="NodaTime" Version="2.4.6" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="NewFolder\" />
   </ItemGroup>
 </Project>
