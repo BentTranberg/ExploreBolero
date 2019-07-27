@@ -20,6 +20,7 @@ type Page =
 
 type Message =
     | SetPage of Page
+    | ToggleBurger
     | Error of exn
     | Counter of Counter.Message
     | BulmaExt of BulmaExt.Message
@@ -33,6 +34,7 @@ type Model =
     {
         page: Page
         error: string option
+        navBarBurgerActive: bool
         counter: Counter.Model
         bulmaExt: BulmaExt.Model
         blazorDates: BlazorDates.Model
@@ -50,6 +52,7 @@ module Model =
         {
             page = Home
             error = None
+            navBarBurgerActive = false
             counter = Counter.Model.init
             bulmaExt = BulmaExt.Model.init
             blazorDates = BlazorDates.Model.init
@@ -64,6 +67,8 @@ module Model =
 
     let update (remote: RemoteServices) (message: Message) (model: Model) =
         match message with
+        | ToggleBurger ->
+            { model with navBarBurgerActive = not model.navBarBurgerActive }, Cmd.none
         | Error exn
         | Books (Books.Error exn)
         | Login (Login.Error exn) ->
@@ -128,6 +133,9 @@ module View =
 
     let view (model: Model) (dispatch: Dispatch<Message>) =
         Tmpl()
+            .NavBarBurgerClick(fun _ -> dispatch ToggleBurger)
+            .NavBarBurgerActive(match model.navBarBurgerActive with true -> "is-active" | false -> "")
+            .NavBarMenuActive(match model.navBarBurgerActive with true -> "is-active" | false -> "")
             .Menu(concat [
                 menuItem model Page.Home "Home"
                 menuItem model Page.Counter "Counter"
