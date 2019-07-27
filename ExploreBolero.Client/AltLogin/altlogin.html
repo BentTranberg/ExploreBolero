@@ -1,0 +1,74 @@
+﻿<div class="content">
+	<h1 class="title is-4">Alternative login page</h1>
+	<p>
+		This login dialog design is based on a snippet from dansup's wonderful free
+		<a href="https://bulmatemplates.github.io/bulma-templates">Bulma template collection</a>.
+	</p>
+	<p>
+		I found the link to it in a
+		<a href="https://github.com/websharper-samples/LoginWithBulma">tutorial</a>
+		written by Adam Granicz of IntelliFactory in which he explains
+		how to imlement a login page for a SPA with WebSharper.
+	</p>
+	<p>
+		I intend to use this design for the actual login page, but due to lack of time I'll
+		showcase only the design for now, and work on porting it to the login page later.
+	</p>
+	<div class="is-divider" data-content="DEMO"></div>
+	<style>
+		.container {
+			max-width: 500px;
+		}
+
+		.box {
+			margin-top: 5rem;
+		}
+
+		.avatar {
+			margin-top: -70px;
+			padding-bottom: 20px;
+		}
+
+			.avatar img {
+				padding: 5px;
+				background: #fff;
+				border-radius: 50%;
+				-webkit-box-shadow: 0 2px 3px rgba(10,10,10,.1), 0 0 0 1px rgba(10,10,10,.1);
+				box-shadow: 0 2px 3px rgba(10,10,10,.1), 0 0 0 1px rgba(10,10,10,.1);
+			}
+	</style>
+	<div class="container has-text-centered">
+		<h3 class="title has-text-grey">Login</h3>
+		<p class="subtitle has-text-grey">Please login to proceed.</p>
+		<div class="box">
+			<figure class="avatar">
+				<img src="128x128.png">
+			</figure>
+			<form>
+				<div class="field">
+					<div class="control">
+						<input class="input is-medium" type="email" placeholder="Your Email" autofocus="">
+					</div>
+				</div>
+
+				<div class="field">
+					<div class="control">
+						<input class="input is-medium" type="password" placeholder="Your Password">
+					</div>
+				</div>
+				<div class="field">
+					<label class="checkbox">
+						<input type="checkbox">
+						Remember me
+					</label>
+				</div>
+				<button class="button is-block is-info is-medium is-fullwidth">Login</button>
+			</form>
+		</div>
+		<p class="has-text-grey">
+			<a href="../">Sign Up</a> &nbsp;·&nbsp;
+			<a href="../">Forgot Password</a> &nbsp;·&nbsp;
+			<a href="../">Need Help?</a>
+		</p>
+	</div>
+</div>

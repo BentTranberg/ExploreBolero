@@ -15,6 +15,7 @@ type Page =
     | [<EndPoint "/data">] Data
     | [<EndPoint "/bulmaext">] BulmaExt
     | [<EndPoint "/dates">] Dates
+    | [<EndPoint "/altlogin">] AltLogin
 
 type Message =
     | SetPage of Page
@@ -125,6 +126,7 @@ module View =
                 menuItem model Page.Data "Download data"
                 menuItem model Page.BulmaExt "Bulma Extensions"
                 menuItem model Page.Dates "Bulma Ext. Dates"
+                menuItem model Page.AltLogin "Bulma Alt. Login"
                 Login.View.logoutButton model.login (dispatch << Message.Login)
             ])
             .Body(
@@ -137,6 +139,7 @@ module View =
                     cond model.login.signedInAs <| function
                     | Some _ -> Books.View.page model.books (dispatch << Message.Books)
                     | None -> Login.View.page model.login (dispatch << Message.Login)
+                | Page.AltLogin -> AltLogin.View.altLoginPage ()
             )
             .Error(
                 cond model.error <| function
