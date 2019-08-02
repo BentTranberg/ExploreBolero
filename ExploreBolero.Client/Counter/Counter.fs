@@ -25,14 +25,20 @@ module Model =
 
 module View =
 
+    open System
     open Bolero
     open Elmish
 
     type Tmpl = Template<"Counter/counter.html">
 
+    let strToIntDef s def =
+        match Int32.TryParse s with
+        | true, i -> i
+        | false, _ -> def
+
     let page (model: Model) (dispatch: Dispatch<Message>) =
         Tmpl()
             .Decrement(fun _ -> dispatch Decrement)
             .Increment(fun _ -> dispatch Increment)
-            .Value(model.value, fun v -> dispatch (SetValue v))
+            .Value(string model.value, fun v -> dispatch (SetValue <| strToIntDef v model.value))
             .Elt()
