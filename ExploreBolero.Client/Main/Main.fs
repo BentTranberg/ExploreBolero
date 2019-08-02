@@ -18,6 +18,14 @@ type Page =
     | [<EndPoint "/dates">] Dates
     | [<EndPoint "/altlogin">] AltLogin
 
+type PageModel =
+    | NoPageModel
+    | CounterModel of Counter.Model
+    | BulmaExtModel of BulmaExt.Model
+    | BlazorDatesModel of BlazorDates.Model
+    | DatesModel of Dates.Model
+    | BooksModel of Books.Model
+
 type Message =
     | SetPage of Page
     | ToggleBurger
@@ -33,12 +41,9 @@ type Message =
 type Model =
     {
         page: Page
+        pageModel: PageModel
         error: string option
         navBarBurgerActive: bool
-        counter: Counter.Model
-        bulmaExt: BulmaExt.Model
-        blazorDates: BlazorDates.Model
-        dates: Dates.Model
         books: Books.Model
         login: Login.Model
     }
@@ -53,10 +58,7 @@ module Model =
             page = Home
             error = None
             navBarBurgerActive = false
-            counter = Counter.Model.init
-            bulmaExt = BulmaExt.Model.init
-            blazorDates = BlazorDates.Model.init
-            dates = Dates.Model.init
+            pageModel = NoPageModel
             books = Books.Model.init
             login = Login.Model.init
         }
@@ -81,23 +83,42 @@ module Model =
             { model with error = None }, Cmd.none
 
         | SetPage page ->
-            { model with page = page }, Cmd.none
+            let pageModel =
+                match page with
+                | Page.Counter -> CounterModel Counter.Model.init
+                | Page.BulmaExt -> BulmaExtModel BulmaExt.Model.init
+                | Page.BlazorDates -> BlazorDatesModel BlazorDates.Model.init
+                | Page.Dates -> DatesModel Dates.Model.init
+                | _ -> NoPageModel
+            { model with page = page; pageModel = pageModel }, Cmd.none
 
         | Counter msg ->
-            let counterModel = Counter.Model.update msg model.counter
-            { model with counter = counterModel }, Cmd.none
+            match model.pageModel with
+            | CounterModel counterModel ->
+                let counterModel' = Counter.Model.update msg counterModel
+                { model with pageModel = CounterModel counterModel' }, Cmd.none
+            | _ -> model, Cmd.none
 
         | BulmaExt msg ->
-            let bulmaExtModel, bulmaExtCmd = BulmaExt.Model.update msg model.bulmaExt
-            { model with bulmaExt = bulmaExtModel }, Cmd.map BulmaExt bulmaExtCmd
+            match model.pageModel with
+            | BulmaExtModel bulmaExtModel ->
+                let bulmaExtModel', bulmaExtCmd' = BulmaExt.Model.update msg bulmaExtModel
+                { model with pageModel = BulmaExtModel bulmaExtModel' }, Cmd.map BulmaExt bulmaExtCmd'
+            | _ -> model, Cmd.none
 
         | BlazorDates msg ->
-            let blazorDatesModel, blazorDatesCmd = BlazorDates.Model.update msg model.blazorDates
-            { model with blazorDates = blazorDatesModel }, Cmd.map Dates blazorDatesCmd
+            match model.pageModel with
+            | BlazorDatesModel blazorDatesModel ->
+                let blazorDatesModel', blazorDatesCmd' = BlazorDates.Model.update msg blazorDatesModel
+                { model with pageModel = BlazorDatesModel blazorDatesModel' }, Cmd.map Dates blazorDatesCmd'
+            | _ -> model, Cmd.none
 
         | Dates msg ->
-            let datesModel, datesCmd = Dates.Model.update msg model.dates
-            { model with dates = datesModel }, Cmd.map Dates datesCmd
+            match model.pageModel with
+            | DatesModel datesModel ->
+                let datesModel', datesCmd' = Dates.Model.update msg datesModel
+                { model with pageModel = DatesModel datesModel' }, Cmd.map Dates datesCmd'
+            | _ -> model, Cmd.none
 
         | Books msg ->
             let booksModel, booksCmd = Books.Model.update remote.books msg model.books
@@ -131,6 +152,8 @@ module View =
             .Text(text)
             .Elt()
 
+    let noPage = text "No page."
+
     let view (model: Model) (dispatch: Dispatch<Message>) =
         Tmpl()
             .NavBarBurgerClick(fun _ -> dispatch ToggleBurger)
@@ -149,10 +172,26 @@ module View =
             .Body(
                 cond model.page <| function
                 | Page.Home -> Home.View.homePage ()
-                | Page.Counter -> Counter.View.page model.counter (dispatch << Message.Counter)
-                | Page.BulmaExt -> BulmaExt.View.page model.bulmaExt (dispatch << Message.BulmaExt)
-                | Page.BlazorDates -> BlazorDates.View.page model.blazorDates (dispatch << Message.BlazorDates)
-                | Page.Dates -> Dates.View.page model.dates (dispatch << Message.Dates)
+                | Page.Counter ->
+                    match model.pageModel with
+                    | CounterModel counterModel ->
+                        Counter.View.page counterModel (dispatch << Message.Counter)
+                    | _ -> noPage
+                | Page.BulmaExt ->
+                    match model.pageModel with
+                    | BulmaExtModel bulmaExtModel ->
+                        BulmaExt.View.page bulmaExtModel (dispatch << Message.BulmaExt)
+                    | _ -> noPage
+                | Page.BlazorDates ->
+                    match model.pageModel with
+                    | BlazorDatesModel blazorDatesModel ->
+                        BlazorDates.View.page blazorDatesModel (dispatch << Message.BlazorDates)
+                    | _ -> noPage
+                | Page.Dates ->
+                    match model.pageModel with
+                    | DatesModel datesModel ->
+                        Dates.View.page datesModel (dispatch << Message.Dates)
+                    | _ -> noPage
                 | Page.Data ->
                     cond model.login.signedInAs <| function
                     | Some _ -> Books.View.page model.books (dispatch << Message.Books)
