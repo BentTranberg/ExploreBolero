@@ -1,17 +1,29 @@
 <h1 class="title is-4">A fancy counter</h1>
+<div class="content">
+	<p>
+		You probably recognize this demo from the Bulma templates, but it's been shined up
+		a bit with the help of Bulma.
+	</p>
+	<p>
+		The type of the input is "text" rather than "number", because using "number" will
+		make the browser add native spinners when the input is focused for editing, and
+		we don't want them visible here.
+	</p>
+</div>
+<div class="is-divider" data-content="DEMO"></div>
 <div class="field has-addons">
 	<p class="control">
-		<a class="button is-rounded is-warning" onclick="${Decrement}">
+		<a class="button is-rounded is-focused is-primary" onclick="${Decrement}">
 			<span class="icon is-small">
 				<i class="fas fa-minus"></i>
 			</span>
 		</a>
 	</p>
 	<p class="control">
-		<input class="input is-warning has-text-centered" type="text" bind="${Value}">
+		<input class="input has-text-centered is-primary" type="text" size="10" bind="${Value}">
 	</p>
 	<p class="control">
-		<a class="button is-rounded is-warning" onclick="${Increment}">
+		<a class="button is-rounded is-focused is-primary" onclick="${Increment}">
 			<span class="icon is-small">
 				<i class="fas fa-plus"></i>
 			</span>
