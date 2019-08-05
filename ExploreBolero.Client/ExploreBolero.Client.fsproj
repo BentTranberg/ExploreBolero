@@ -30,11 +30,14 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="BlazorNodaTimeDateTimePicker" Version="0.0.10" />
-    <PackageReference Include="Bolero" Version="0.5.28-preview*" />
-    <PackageReference Include="Bolero.Build" Version="0.5.28-preview*" />
-    <PackageReference Include="Bolero.HotReload" Version="0.5.28-preview*" />
-    <PackageReference Include="Microsoft.AspNetCore.Blazor.Build" Version="3.0-preview5-*" />
-    <PackageReference Include="Microsoft.AspNetCore.Blazor.DevServer" Version="3.0-preview5-*" />
+    <PackageReference Include="Bolero" Version="0.7.8-preview7" />
+    <PackageReference Include="Bolero.Build" Version="0.7.8-preview7" />
+    <PackageReference Include="Bolero.HotReload" Version="0.7.1-preview7" />
+    <PackageReference Include="Microsoft.AspNetCore.Blazor.Build" Version="3.0.0-preview7.19365.7" />
+    <PackageReference Include="Microsoft.AspNetCore.Blazor.DevServer" Version="3.0.0-preview7.19365.7" />
     <PackageReference Include="NodaTime" Version="2.4.6" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Update="FSharp.Core" Version="4.7.0" />
   </ItemGroup>
 </Project>

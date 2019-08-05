@@ -20,5 +20,5 @@ type App() =
         Program.mkProgram init update Main.View.view
         |> Program.withRouter Main.Router.router
 #if DEBUG
-        |> Program.withHotReloading
+        |> Program.withHotReload
 #endif

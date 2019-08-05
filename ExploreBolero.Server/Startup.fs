@@ -5,6 +5,8 @@ open Microsoft.AspNetCore.Authentication.Cookies
 open Microsoft.AspNetCore.Builder
 open Microsoft.AspNetCore.Hosting
 open Microsoft.Extensions.DependencyInjection
+open Bolero
+open Bolero.Remoting
 open Bolero.Remoting.Server
 open Bolero.Templating.Server
 open ExploreBolero
@@ -24,17 +26,22 @@ type Startup() =
 #if DEBUG
             .AddHotReload(templateDir = "../ExploreBolero.Client")
 #endif
+            .AddMvcCore()
         |> ignore
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-    member this.Configure(app: IApplicationBuilder) =
+    member this.Configure(app: IApplicationBuilder, env: IWebHostEnvironment) =
         app
             .UseAuthentication()
             .UseRemoting()
+            .UseClientSideBlazorFiles<Client.Startup>()
+            .UseRouting()
+            .UseEndpoints(fun endpoints ->
 #if DEBUG
-            .UseHotReload()
+                endpoints.UseHotReload()
 #endif
-            .UseBlazor<Client.Startup>()
+                endpoints.MapDefaultControllerRoute() |> ignore
+                endpoints.MapFallbackToClientSideBlazor<Client.Startup>("index.html") |> ignore)
         |> ignore
 
 module Program =
