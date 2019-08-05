@@ -55,7 +55,7 @@ module Model =
         | ClearFields ->
             { model with username = ""; password = "" }, Cmd.none
         | GetSignedInAs ->
-            model, Cmd.ofRemote remote.getUsername () (fun r -> RecvSignedInAs (r.TryGetResponse())) Error
+            model, Cmd.ofAuthorized remote.getUsername () RecvSignedInAs Error
         | RecvSignedInAs username ->
             { model with signedInAs = username }, Cmd.none
         | SendSignIn ->
