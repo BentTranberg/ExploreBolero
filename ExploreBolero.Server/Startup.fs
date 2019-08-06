@@ -1,5 +1,6 @@
 namespace ExploreBolero.Server
 
+open System
 open Microsoft.AspNetCore
 open Microsoft.AspNetCore.Authentication.Cookies
 open Microsoft.AspNetCore.Builder
@@ -24,7 +25,7 @@ type Startup() =
             .AddRemoting<RemoteServices.BookService>()
             .AddRemoting(RemoteServices.LoginService.service)
 #if DEBUG
-            .AddHotReload(templateDir = "../ExploreBolero.Client")
+            .AddHotReload(templateDir = IO.Path.Combine(__SOURCE_DIRECTORY__, "../ExploreBolero.Client"))
 #endif
             .AddMvcCore()
         |> ignore
