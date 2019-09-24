@@ -2,11 +2,16 @@
 
 open System
 open Bolero.Html
-open BlazorNodaTimeDateTimePicker
+open NodaTimePicker
 // Note: NodaTime is accessed qualified, to avoid conflicts.
 
+// NOTE!!! The following is for the old library, named BlazorNodaTimeDateTimePicker.
 // Documentation for DatePicker settings is here ( look for [Parameter] ) :
 // https://github.com/nheath99/BlazorNodaTimeDateTimePicker/blob/master/src/BlazorNodaTimeDateTimePicker/DatePicker.razor
+// NOTE!!! DEAD LINK
+
+// This is the repo for the new library:
+// https://github.com/nheath99/NodaTimePicker
 
 let datePicker (selectedDate: DateTime) (handleSelected: DateTime -> unit) =
     comp<DatePicker> [
