@@ -12,6 +12,7 @@ type RemoteServices =
 type Page =
     | [<EndPoint "/">] Home
     | [<EndPoint "/counter">] Counter
+    | [<EndPoint "/dropdown">] Dropdown
     | [<EndPoint "/data">] Data
     | [<EndPoint "/bulmaext">] BulmaExt
     | [<EndPoint "/blazordates">] BlazorDates
@@ -21,6 +22,7 @@ type Page =
 type PageModel =
     | NoPageModel
     | CounterModel of Counter.Model
+    | DropdownModel of Dropdown.Model
     | BulmaExtModel of BulmaExt.Model
     | BlazorDatesModel of BlazorDates.Model
     | DatesModel of Dates.Model
@@ -31,6 +33,7 @@ type Message =
     | ToggleBurger
     | Error of exn
     | Counter of Counter.Message
+    | Dropdown of Dropdown.Message
     | BulmaExt of BulmaExt.Message
     | BlazorDates of BlazorDates.Message
     | Dates of Dates.Message
@@ -86,6 +89,7 @@ module Model =
             let pageModel =
                 match page with
                 | Page.Counter -> CounterModel Counter.Model.init
+                | Page.Dropdown -> DropdownModel Dropdown.Model.init
                 | Page.BulmaExt -> BulmaExtModel BulmaExt.Model.init
                 | Page.BlazorDates -> BlazorDatesModel BlazorDates.Model.init
                 | Page.Dates -> DatesModel Dates.Model.init
@@ -97,6 +101,13 @@ module Model =
             | CounterModel counterModel ->
                 let counterModel' = Counter.Model.update msg counterModel
                 { model with pageModel = CounterModel counterModel' }, Cmd.none
+            | _ -> model, Cmd.none
+
+        | Dropdown msg ->
+            match model.pageModel with
+            | DropdownModel dropdownModel ->
+                let dropdownModel', dropdownCmd' = Dropdown.Model.update msg dropdownModel
+                { model with pageModel = DropdownModel dropdownModel' }, Cmd.map Dropdown dropdownCmd'
             | _ -> model, Cmd.none
 
         | BulmaExt msg ->
@@ -162,6 +173,7 @@ module View =
             .Menu(concat [
                 menuItem model Page.Home "Home"
                 menuItem model Page.Counter "Counter"
+                menuItem model Page.Dropdown "Dropdown"
                 menuItem model Page.Data "Download data"
                 menuItem model Page.BulmaExt "Bulma Extensions"
                 menuItem model Page.BlazorDates "Blazor Dates"
@@ -176,6 +188,11 @@ module View =
                     match model.pageModel with
                     | CounterModel counterModel ->
                         Counter.View.page counterModel (dispatch << Message.Counter)
+                    | _ -> noPage
+                | Page.Dropdown ->
+                    match model.pageModel with
+                    | DropdownModel dropdownModel ->
+                        Dropdown.View.page dropdownModel (dispatch << Message.Dropdown)
                     | _ -> noPage
                 | Page.BulmaExt ->
                     match model.pageModel with

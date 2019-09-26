@@ -12,6 +12,8 @@
     <Compile Include="Common\Common.fs" />
     <Content Include="Counter\counter.html" />
     <Compile Include="Counter\Counter.fs" />
+    <Content Include="Dropdown\dropdown.html" />
+    <Compile Include="Dropdown\Dropdown.fs" />
     <Content Include="Login\login.html" />
     <Compile Include="Login\Login.fs" />
     <Content Include="Books\books.html" />
