@@ -8,7 +8,7 @@ open ExploreBolero.Client
 
 // This remote service requires injected dependencies (namely, `env`),
 // so it must be defined as a RemoteHandler class.
-type BookService(env: IWebHostEnvironment) =
+type BookService(ctx: IRemoteContext, env: IWebHostEnvironment) =
     inherit RemoteHandler<Books.RemoteService>()
 
     let books =
@@ -19,15 +19,15 @@ type BookService(env: IWebHostEnvironment) =
 
     override this.Handler =
         {
-            getBooks = Remote.authorize <| fun _ () -> async {
+            getBooks = ctx.Authorize <| fun () -> async {
                 return books.ToArray()
             }
 
-            addBook = Remote.authorize <| fun _ book -> async {
+            addBook = ctx.Authorize <| fun book -> async {
                 books.Add(book)
             }
 
-            removeBookByIsbn = Remote.authorize <| fun _ isbn -> async {
+            removeBookByIsbn = ctx.Authorize <| fun isbn -> async {
                 books.RemoveAll(fun b -> b.isbn = isbn) |> ignore
             }
         }

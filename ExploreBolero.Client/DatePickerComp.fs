@@ -3,17 +3,18 @@
 open System
 open Bolero.Html
 open NodaTimePicker
+open Microsoft.AspNetCore.Components
 // Note: NodaTime is accessed qualified, to avoid conflicts.
 
-// NOTE!!! The following is for the old library, named BlazorNodaTimeDateTimePicker.
-// Documentation for DatePicker settings is here ( look for [Parameter] ) :
-// https://github.com/nheath99/BlazorNodaTimeDateTimePicker/blob/master/src/BlazorNodaTimeDateTimePicker/DatePicker.razor
-// NOTE!!! DEAD LINK
+// Documentation for DatePicker
+// https://github.com/nheath99/NodaTimePicker/blob/master/src/NodaTimePicker/DatePickerComponentBase.cs
 
-// This is the repo for the new library:
-// https://github.com/nheath99/NodaTimePicker
+type NodaLocalDateDelegate = delegate of NodaTime.LocalDate -> unit
 
 let datePicker (selectedDate: DateTime) (handleSelected: DateTime -> unit) =
+    let myHandler (d: NodaTime.LocalDate) = d.ToDateTimeUnspecified() |> handleSelected
+    let myDelegate = new NodaLocalDateDelegate(myHandler)
+    let OnSelected = new EventCallback<NodaTime.LocalDate>(null, myDelegate)
     comp<DatePicker> [
         "Inline" => true
         "SelectedDate" => NodaTime.LocalDate.FromDateTime selectedDate
@@ -29,5 +30,5 @@ let datePicker (selectedDate: DateTime) (handleSelected: DateTime -> unit) =
         // "WeekAbbreviation" => "Uke" // default: Wk
 
         // Handlers
-        "Selected" => Action<_>(fun (d: NodaTime.LocalDate) -> d.ToDateTimeUnspecified() |> handleSelected)
+        "OnSelected" => OnSelected
     ] []

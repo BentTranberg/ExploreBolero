@@ -29,13 +29,13 @@
     <Compile Include="Startup.fs" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Bolero" Version="0.7.8-preview7" />
-    <PackageReference Include="Bolero.Build" Version="0.7.8-preview7" />
-    <PackageReference Include="Bolero.HotReload" Version="0.7.2-preview7" />
-    <PackageReference Include="Microsoft.AspNetCore.Blazor.Build" Version="3.0.0-preview7.19365.7" />
-    <PackageReference Include="Microsoft.AspNetCore.Blazor.DevServer" Version="3.0.0-preview7.19365.7" />
+    <PackageReference Include="Bolero" Version="0.9.3-preview9" />
+    <PackageReference Include="Bolero.Build" Version="0.9.3-preview9" />
+    <PackageReference Include="Bolero.HotReload" Version="0.9.3-preview9" />
+    <PackageReference Include="Microsoft.AspNetCore.Blazor.Build" Version="3.0.0-preview9.19465.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Blazor.DevServer" Version="3.0.0-preview9.19465.2" />
     <PackageReference Include="NodaTime" Version="3.0.0-beta01" />
-    <PackageReference Include="NodaTimePicker" Version="0.1.0" />
+    <PackageReference Include="NodaTimePicker" Version="0.4.2" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Update="FSharp.Core" Version="4.7.0" />

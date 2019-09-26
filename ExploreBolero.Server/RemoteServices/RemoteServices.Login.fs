@@ -8,21 +8,21 @@ module LoginService =
 
     // This remote service doesn't require any injected dependencies,
     // so it can be defined as a top-level value.
-    let service : Login.RemoteService =
+    let service (ctx: IRemoteContext) : Login.RemoteService =
         {
-            signIn = Remote.withContext <| fun http (username, password) -> async {
+            signIn = fun (username, password) -> async {
                 if password = "password" then
-                    do! http.AsyncSignIn(username, TimeSpan.FromDays(365.))
+                    do! ctx.HttpContext.AsyncSignIn(username, TimeSpan.FromDays(365.))
                     return Some username
                 else
                     return None
             }
 
-            signOut = Remote.withContext <| fun http () -> async {
-                return! http.AsyncSignOut()
+            signOut = fun () -> async {
+                return! ctx.HttpContext.AsyncSignOut()
             }
 
-            getUsername = Remote.authorize <| fun http () -> async {
-                return http.User.Identity.Name
+            getUsername = fun () -> async {
+                return ctx.HttpContext.User.Identity.Name
             }
         }

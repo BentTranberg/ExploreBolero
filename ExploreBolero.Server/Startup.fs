@@ -17,6 +17,7 @@ type Startup() =
     // This method gets called by the runtime. Use this method to add services to the container.
     // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
     member this.ConfigureServices(services: IServiceCollection) =
+        services.AddMvcCore() |> ignore
         services
             .AddAuthorization()
             .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
@@ -27,7 +28,6 @@ type Startup() =
 #if DEBUG
             .AddHotReload(templateDir = IO.Path.Combine(__SOURCE_DIRECTORY__, "../ExploreBolero.Client"))
 #endif
-            .AddMvcCore()
         |> ignore
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
