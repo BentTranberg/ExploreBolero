@@ -11,7 +11,7 @@ type RemoteServices =
 
 type Page =
     | [<EndPoint "/">] Home
-    | [<EndPoint "/counter">] Counter
+    | [<EndPoint "/counter">] Counter of PageModel<Counter.Model>
     | [<EndPoint "/dropdown">] Dropdown
     | [<EndPoint "/data">] Data
     | [<EndPoint "/bulmaext">] BulmaExt
@@ -19,9 +19,9 @@ type Page =
     | [<EndPoint "/dates">] Dates
     | [<EndPoint "/altlogin">] AltLogin
 
-type PageModel =
+type OldPageModel =
     | NoPageModel
-    | CounterModel of Counter.Model
+    // | CounterModel of Counter.Model
     | DropdownModel of Dropdown.Model
     | BulmaExtModel of BulmaExt.Model
     | BlazorDatesModel of BlazorDates.Model
@@ -44,7 +44,7 @@ type Message =
 type Model =
     {
         page: Page
-        pageModel: PageModel
+        oldPageModel: OldPageModel
         error: string option
         navBarBurgerActive: bool
         books: Books.Model
@@ -61,7 +61,7 @@ module Model =
             page = Home
             error = None
             navBarBurgerActive = false
-            pageModel = NoPageModel
+            oldPageModel = NoPageModel
             books = Books.Model.init
             login = Login.Model.init
         }
@@ -86,49 +86,51 @@ module Model =
             { model with error = None }, Cmd.none
 
         | SetPage page ->
-            let pageModel =
+            let oldPageModel =
                 match page with
-                | Page.Counter -> CounterModel Counter.Model.init
+                // | Page.Counter -> CounterModel Counter.Model.init
                 | Page.Dropdown -> DropdownModel Dropdown.Model.init
                 | Page.BulmaExt -> BulmaExtModel BulmaExt.Model.init
                 | Page.BlazorDates -> BlazorDatesModel BlazorDates.Model.init
                 | Page.Dates -> DatesModel Dates.Model.init
                 | _ -> NoPageModel
-            { model with page = page; pageModel = pageModel }, Cmd.none
+            match oldPageModel with
+            | NoPageModel -> { model with page = page }, Cmd.none
+            | oldPageModel -> { model with page = page; oldPageModel = oldPageModel }, Cmd.none
 
         | Counter msg ->
-            match model.pageModel with
-            | CounterModel counterModel ->
-                let counterModel' = Counter.Model.update msg counterModel
-                { model with pageModel = CounterModel counterModel' }, Cmd.none
+            match model.page with
+            | Page.Counter x ->
+                let counterModel' = Counter.Model.update msg x.Model
+                { model with page = Page.Counter { Model = counterModel' } }, Cmd.none
             | _ -> model, Cmd.none
 
         | Dropdown msg ->
-            match model.pageModel with
+            match model.oldPageModel with
             | DropdownModel dropdownModel ->
                 let dropdownModel', dropdownCmd' = Dropdown.Model.update msg dropdownModel
-                { model with pageModel = DropdownModel dropdownModel' }, Cmd.map Dropdown dropdownCmd'
+                { model with oldPageModel = DropdownModel dropdownModel' }, Cmd.map Dropdown dropdownCmd'
             | _ -> model, Cmd.none
 
         | BulmaExt msg ->
-            match model.pageModel with
+            match model.oldPageModel with
             | BulmaExtModel bulmaExtModel ->
                 let bulmaExtModel', bulmaExtCmd' = BulmaExt.Model.update msg bulmaExtModel
-                { model with pageModel = BulmaExtModel bulmaExtModel' }, Cmd.map BulmaExt bulmaExtCmd'
+                { model with oldPageModel = BulmaExtModel bulmaExtModel' }, Cmd.map BulmaExt bulmaExtCmd'
             | _ -> model, Cmd.none
 
         | BlazorDates msg ->
-            match model.pageModel with
+            match model.oldPageModel with
             | BlazorDatesModel blazorDatesModel ->
                 let blazorDatesModel', blazorDatesCmd' = BlazorDates.Model.update msg blazorDatesModel
-                { model with pageModel = BlazorDatesModel blazorDatesModel' }, Cmd.map Dates blazorDatesCmd'
+                { model with oldPageModel = BlazorDatesModel blazorDatesModel' }, Cmd.map Dates blazorDatesCmd'
             | _ -> model, Cmd.none
 
         | Dates msg ->
-            match model.pageModel with
+            match model.oldPageModel with
             | DatesModel datesModel ->
                 let datesModel', datesCmd' = Dates.Model.update msg datesModel
-                { model with pageModel = DatesModel datesModel' }, Cmd.map Dates datesCmd'
+                { model with oldPageModel = DatesModel datesModel' }, Cmd.map Dates datesCmd'
             | _ -> model, Cmd.none
 
         | Books msg ->
@@ -147,7 +149,11 @@ module Model =
 
 module Router =
 
-    let router = Router.infer SetPage (fun model -> model.page)
+    let defaultModel = function
+        | Page.Counter model -> Router.definePageModel model { Counter.Model.value = 0 }
+        | _ -> ()
+
+    let router = Router.inferWithModel SetPage (fun model -> model.page) defaultModel
 
 module View =
 
@@ -158,7 +164,11 @@ module View =
 
     let menuItem (model: Model) (page: Page) (text: string) =
         Tmpl.MenuItem()
-            .Active(if model.page = page then "is-active" else "")
+            .Active(
+                match model.page, page with
+                | Page.Counter _, Page.Counter _ -> "is-active"
+                | _ -> if model.page = page then "is-active" else ""
+                )
             .Url(Router.router.Link page)
             .Text(text)
             .Elt()
@@ -172,7 +182,7 @@ module View =
             .NavBarMenuActive(match model.navBarBurgerActive with true -> "is-active" | false -> "")
             .Menu(concat [
                 menuItem model Page.Home "Home"
-                menuItem model Page.Counter "Counter"
+                menuItem model (Page.Counter Router.noModel) "Counter"
                 menuItem model Page.Dropdown "Dropdown"
                 menuItem model Page.Data "Download data"
                 menuItem model Page.BulmaExt "Bulma Extensions"
@@ -184,28 +194,24 @@ module View =
             .Body(
                 cond model.page <| function
                 | Page.Home -> Home.View.homePage ()
-                | Page.Counter ->
-                    match model.pageModel with
-                    | CounterModel counterModel ->
-                        Counter.View.page counterModel (dispatch << Message.Counter)
-                    | _ -> noPage
+                | Page.Counter x -> Counter.View.page x.Model (dispatch << Message.Counter)
                 | Page.Dropdown ->
-                    match model.pageModel with
+                    match model.oldPageModel with
                     | DropdownModel dropdownModel ->
                         Dropdown.View.page dropdownModel (dispatch << Message.Dropdown)
                     | _ -> noPage
                 | Page.BulmaExt ->
-                    match model.pageModel with
+                    match model.oldPageModel with
                     | BulmaExtModel bulmaExtModel ->
                         BulmaExt.View.page bulmaExtModel (dispatch << Message.BulmaExt)
                     | _ -> noPage
                 | Page.BlazorDates ->
-                    match model.pageModel with
+                    match model.oldPageModel with
                     | BlazorDatesModel blazorDatesModel ->
                         BlazorDates.View.page blazorDatesModel (dispatch << Message.BlazorDates)
                     | _ -> noPage
                 | Page.Dates ->
-                    match model.pageModel with
+                    match model.oldPageModel with
                     | DatesModel datesModel ->
                         Dates.View.page datesModel (dispatch << Message.Dates)
                     | _ -> noPage
