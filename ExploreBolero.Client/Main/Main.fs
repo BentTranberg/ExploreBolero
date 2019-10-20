@@ -15,13 +15,12 @@ type Page =
     | [<EndPoint "/dropdown">] Dropdown of PageModel<Dropdown.Model>
     | [<EndPoint "/data">] Data
     | [<EndPoint "/bulmaext">] BulmaExt of PageModel<BulmaExt.Model>
-    | [<EndPoint "/blazordates">] BlazorDates
+    | [<EndPoint "/blazordates">] BlazorDates of PageModel<BlazorDates.Model>
     | [<EndPoint "/dates">] Dates
     | [<EndPoint "/altlogin">] AltLogin
 
 type OldPageModel = // TODO: Remove when old page system is fully replaced.
     | NoPageModel
-    | BlazorDatesModel of BlazorDates.Model
     | DatesModel of Dates.Model
     | BooksModel of Books.Model
 
@@ -85,7 +84,6 @@ module Model =
         | SetPage page ->
             let oldPageModel = // TODO: Remove when old page system is fully replaced.
                 match page with
-                | Page.BlazorDates -> BlazorDatesModel BlazorDates.Model.init
                 | Page.Dates -> DatesModel Dates.Model.init
                 | _ -> NoPageModel
             match oldPageModel with // TODO: Remove when old page system is fully replaced.
@@ -116,10 +114,10 @@ module Model =
             | _ -> model, Cmd.none
 
         | BlazorDates msg ->
-            match model.oldPageModel with
-            | BlazorDatesModel blazorDatesModel ->
-                let blazorDatesModel', blazorDatesCmd' = BlazorDates.Model.update msg blazorDatesModel
-                { model with oldPageModel = BlazorDatesModel blazorDatesModel' }, Cmd.map Dates blazorDatesCmd'
+            match model.page with
+            | Page.BlazorDates x ->
+                let m', cmd' = BlazorDates.Model.update msg x.Model
+                { model with page = Page.BlazorDates { Model = m' } }, Cmd.map BlazorDates cmd'
             | _ -> model, Cmd.none
 
         | Dates msg ->
@@ -145,10 +143,13 @@ module Model =
 
 module Router =
 
+    open System
+
     let defaultModel = function
-        | Page.Counter model -> Router.definePageModel model { Counter.Model.value = 0 }
-        | Page.Dropdown model -> Router.definePageModel model { Dropdown.Model.dummy = "" }
-        | Page.BulmaExt model -> Router.definePageModel model { BulmaExt.Model.dummy = "" }
+        | Page.Counter model -> Router.definePageModel model Counter.Model.init
+        | Page.Dropdown model -> Router.definePageModel model Dropdown.Model.init
+        | Page.BulmaExt model -> Router.definePageModel model BulmaExt.Model.init
+        | Page.BlazorDates model -> Router.definePageModel model BlazorDates.Model.init
         | _ -> ()
 
     let router = Router.inferWithModel SetPage (fun model -> model.page) defaultModel
@@ -166,7 +167,9 @@ module View =
                 match model.page, page with
                 | Page.Counter _, Page.Counter _
                 | Page.Dropdown _, Page.Dropdown _
-                | Page.BulmaExt _, Page.BulmaExt _ -> "is-active"
+                | Page.BulmaExt _, Page.BulmaExt _
+                | Page.BlazorDates _, Page.BlazorDates _
+                    -> "is-active"
                 | _ -> if model.page = page then "is-active" else "" // TODO: Replace with just "" when old page system is fully replaced.
                 )
             .Url(Router.router.Link page)
@@ -186,7 +189,7 @@ module View =
                 menuItem model (Page.Dropdown Router.noModel) "Dropdown"
                 menuItem model Page.Data "Download data"
                 menuItem model (Page.BulmaExt Router.noModel) "Bulma Extensions"
-                menuItem model Page.BlazorDates "Blazor Dates"
+                menuItem model (Page.BlazorDates Router.noModel) "Blazor Dates"
                 menuItem model Page.Dates "Bulma Ext. Dates"
                 menuItem model Page.AltLogin "Bulma Alt. Login"
                 Login.View.logoutButton model.login (dispatch << Message.Login)
@@ -197,11 +200,7 @@ module View =
                 | Page.Counter x -> Counter.View.page x.Model (dispatch << Message.Counter)
                 | Page.Dropdown x -> Dropdown.View.page x.Model (dispatch << Message.Dropdown)
                 | Page.BulmaExt x -> BulmaExt.View.page x.Model (dispatch << Message.BulmaExt)
-                | Page.BlazorDates ->
-                    match model.oldPageModel with
-                    | BlazorDatesModel blazorDatesModel ->
-                        BlazorDates.View.page blazorDatesModel (dispatch << Message.BlazorDates)
-                    | _ -> noPage
+                | Page.BlazorDates x -> BlazorDates.View.page x.Model (dispatch << Message.BlazorDates)
                 | Page.Dates ->
                     match model.oldPageModel with
                     | DatesModel datesModel ->
