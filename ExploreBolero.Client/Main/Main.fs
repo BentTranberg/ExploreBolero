@@ -14,14 +14,13 @@ type Page =
     | [<EndPoint "/counter">] Counter of PageModel<Counter.Model>
     | [<EndPoint "/dropdown">] Dropdown of PageModel<Dropdown.Model>
     | [<EndPoint "/data">] Data
-    | [<EndPoint "/bulmaext">] BulmaExt
+    | [<EndPoint "/bulmaext">] BulmaExt of PageModel<BulmaExt.Model>
     | [<EndPoint "/blazordates">] BlazorDates
     | [<EndPoint "/dates">] Dates
     | [<EndPoint "/altlogin">] AltLogin
 
 type OldPageModel = // TODO: Remove when old page system is fully replaced.
     | NoPageModel
-    | BulmaExtModel of BulmaExt.Model
     | BlazorDatesModel of BlazorDates.Model
     | DatesModel of Dates.Model
     | BooksModel of Books.Model
@@ -86,7 +85,6 @@ module Model =
         | SetPage page ->
             let oldPageModel = // TODO: Remove when old page system is fully replaced.
                 match page with
-                | Page.BulmaExt -> BulmaExtModel BulmaExt.Model.init
                 | Page.BlazorDates -> BlazorDatesModel BlazorDates.Model.init
                 | Page.Dates -> DatesModel Dates.Model.init
                 | _ -> NoPageModel
@@ -111,10 +109,10 @@ module Model =
             | _ -> model, Cmd.none
 
         | BulmaExt msg ->
-            match model.oldPageModel with
-            | BulmaExtModel bulmaExtModel ->
-                let bulmaExtModel', bulmaExtCmd' = BulmaExt.Model.update msg bulmaExtModel
-                { model with oldPageModel = BulmaExtModel bulmaExtModel' }, Cmd.map BulmaExt bulmaExtCmd'
+            match model.page with
+            | Page.BulmaExt x ->
+                let m', cmd' = BulmaExt.Model.update msg x.Model
+                { model with page = Page.BulmaExt { Model = m' } }, Cmd.map BulmaExt cmd'
             | _ -> model, Cmd.none
 
         | BlazorDates msg ->
@@ -149,6 +147,8 @@ module Router =
 
     let defaultModel = function
         | Page.Counter model -> Router.definePageModel model { Counter.Model.value = 0 }
+        | Page.Dropdown model -> Router.definePageModel model { Dropdown.Model.dummy = "" }
+        | Page.BulmaExt model -> Router.definePageModel model { BulmaExt.Model.dummy = "" }
         | _ -> ()
 
     let router = Router.inferWithModel SetPage (fun model -> model.page) defaultModel
@@ -164,8 +164,9 @@ module View =
         Tmpl.MenuItem()
             .Active(
                 match model.page, page with
-                | Page.Counter _, Page.Counter _ -> "is-active"
-                | Page.Dropdown _, Page.Dropdown _ -> "is-active"
+                | Page.Counter _, Page.Counter _
+                | Page.Dropdown _, Page.Dropdown _
+                | Page.BulmaExt _, Page.BulmaExt _ -> "is-active"
                 | _ -> if model.page = page then "is-active" else "" // TODO: Replace with just "" when old page system is fully replaced.
                 )
             .Url(Router.router.Link page)
@@ -184,7 +185,7 @@ module View =
                 menuItem model (Page.Counter Router.noModel) "Counter"
                 menuItem model (Page.Dropdown Router.noModel) "Dropdown"
                 menuItem model Page.Data "Download data"
-                menuItem model Page.BulmaExt "Bulma Extensions"
+                menuItem model (Page.BulmaExt Router.noModel) "Bulma Extensions"
                 menuItem model Page.BlazorDates "Blazor Dates"
                 menuItem model Page.Dates "Bulma Ext. Dates"
                 menuItem model Page.AltLogin "Bulma Alt. Login"
@@ -195,11 +196,7 @@ module View =
                 | Page.Home -> Home.View.homePage ()
                 | Page.Counter x -> Counter.View.page x.Model (dispatch << Message.Counter)
                 | Page.Dropdown x -> Dropdown.View.page x.Model (dispatch << Message.Dropdown)
-                | Page.BulmaExt ->
-                    match model.oldPageModel with
-                    | BulmaExtModel bulmaExtModel ->
-                        BulmaExt.View.page bulmaExtModel (dispatch << Message.BulmaExt)
-                    | _ -> noPage
+                | Page.BulmaExt x -> BulmaExt.View.page x.Model (dispatch << Message.BulmaExt)
                 | Page.BlazorDates ->
                     match model.oldPageModel with
                     | BlazorDatesModel blazorDatesModel ->
