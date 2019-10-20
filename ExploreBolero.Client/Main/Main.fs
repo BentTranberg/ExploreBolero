@@ -19,10 +19,6 @@ type Page =
     | [<EndPoint "/dates">] Dates of PageModel<Dates.Model>
     | [<EndPoint "/altlogin">] AltLogin
 
-type OldPageModel = // TODO: Remove when old page system is fully replaced.
-    | NoPageModel
-    | BooksModel of Books.Model
-
 type Message =
     | SetPage of Page
     | ToggleBurger
@@ -39,7 +35,6 @@ type Message =
 type Model =
     {
         page: Page
-        oldPageModel: OldPageModel
         error: string option
         navBarBurgerActive: bool
         books: Books.Model
@@ -56,7 +51,6 @@ module Model =
             page = Home
             error = None
             navBarBurgerActive = false
-            oldPageModel = NoPageModel
             books = Books.Model.init
             login = Login.Model.init
         }
@@ -81,14 +75,7 @@ module Model =
             { model with error = None }, Cmd.none
 
         | SetPage page ->
-            let oldPageModel = // TODO: Remove when old page system is fully replaced.
-                match page with
-                | _ -> NoPageModel
-            match oldPageModel with // TODO: Remove when old page system is fully replaced.
-            | NoPageModel ->
-                { model with page = page }, Cmd.none // TODO: Keep only this when old page system is fully replaced.
-            | oldPageModel ->
-                { model with page = page; oldPageModel = oldPageModel }, Cmd.none // TODO: Remove when old page system is fully replaced.
+            { model with page = page }, Cmd.none
 
         | Counter msg ->
             match model.page with
