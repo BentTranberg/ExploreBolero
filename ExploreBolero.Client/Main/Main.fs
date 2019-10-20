@@ -151,13 +151,16 @@ module View =
         Tmpl.MenuItem()
             .Active(
                 match model.page, page with
+                | Page.Home, Page.Home
                 | Page.Counter _, Page.Counter _
                 | Page.Dropdown _, Page.Dropdown _
+                | Page.Data, Page.Data
                 | Page.BulmaExt _, Page.BulmaExt _
                 | Page.BlazorDates _, Page.BlazorDates _
                 | Page.Dates _, Page.Dates _
+                | Page.AltLogin _, Page.AltLogin _
                     -> "is-active"
-                | _ -> if model.page = page then "is-active" else "" // TODO: Replace with just "" when old page system is fully replaced.
+                | _ -> ""
                 )
             .Url(Router.router.Link page)
             .Text(text)
