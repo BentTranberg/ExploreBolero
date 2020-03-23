@@ -31,7 +31,7 @@ module View =
 
     type Tmpl = Template<"Counter/counter.html">
 
-    let strToIntDef s def =
+    let strToIntDef (s: string) def =
         match Int32.TryParse s with
         | true, i -> i
         | false, _ -> def
